@@ -1,4 +1,5 @@
 import pandas as pd
+import random
 
 INSTRUCTION = """Classify the emotion in the following text delimited by triple backticks as either joy, sadness, anger, fear, surprise, or love."""
 
