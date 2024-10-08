@@ -41,10 +41,10 @@ class EmotionClassificationHarness:
             PromptStrategy("Few-shot", lambda text: few_shot_prompt(text, self.train_data_pd)),
             PromptStrategy("Chain-of-Thought", chain_of_thought_prompt),
             PromptStrategy("Emotion Definitions", emotion_definition_prompt),
-            PromptStrategy("Persona-based", persona_based_prompt),
-            PromptStrategy("Multitask", multitask_prompt),
-            PromptStrategy("Structured Output", structured_output_prompt),
-            PromptStrategy("Contrastive", lambda text: contrastive_prompt(text, self.emotions))
+            # PromptStrategy("Persona-based", persona_based_prompt),
+            # PromptStrategy("Multitask", multitask_prompt),
+            # PromptStrategy("Structured Output", structured_output_prompt),
+            # PromptStrategy("Contrastive", lambda text: contrastive_prompt(text, self.emotions))
         ]
 
     def _find_emotion_in_string(self, string):
@@ -92,9 +92,9 @@ class EmotionClassificationHarness:
         for iteration in range(max_iterations):
             if best_strategy is None:
                 performances = [(s, *self.evaluate_strategy(s, self.test_data)) for s in self.strategies]
-                print(max(performances, key=lambda x: x[1]))
-                best_strategy, best_performance = max(performances, key=lambda x: x[1])
-                self.optimization_history.append((iteration, best_strategy, best_performance))
+                # print(max(performances, key=lambda x: x[1]))
+                # best_strategy, best_performance = max(performances, key=lambda x: x[1])
+                # self.optimization_history.append((iteration, best_strategy, best_performance))
             else:
                 unused_strategies = [s for s in self.strategies if s not in best_strategy.strategies]
                 if not unused_strategies:
@@ -115,20 +115,18 @@ class EmotionClassificationHarness:
                 else:
                     break
 
-        return best_strategy, best_performance
+        return
 
-    def run_optimization(self):
+    def run_optimization(self, max_iter):
         print("Starting strategy optimization...")
-        best_strategy, best_performance = self.find_best_combination()
-        print(f"\nBest strategy combination found: {best_strategy.name}")
-        print(f"Best performance (Accuracy): {best_performance:.4f}")
+        self.find_best_combination(max_iterations = max_iter)
 
-        final_accuracy, final_f1, final_cm = self.evaluate_strategy(best_strategy, self.dataset)
-        print(f"\nFinal evaluation on entire dataset:")
-        print(f"Accuracy: {final_accuracy:.4f}")
-        print(f"F1-score: {final_f1:.4f}")
+        # final_accuracy, final_f1, final_cm = self.evaluate_strategy(best_strategy, self.dataset)
+        # print(f"\nFinal evaluation on entire dataset:")
+        # print(f"Accuracy: {final_accuracy:.4f}")
+        # print(f"F1-score: {final_f1:.4f}")
 
-        self.generate_visualizations(best_strategy, final_accuracy, final_f1, final_cm)
+        # self.generate_visualizations(best_strategy, final_accuracy, final_f1, final_cm)
 
     def generate_visualizations(self, best_strategy, final_accuracy, final_f1, final_cm):
         vis.plot_optimization_history(self.optimization_history)
