@@ -21,27 +21,37 @@ df_melted = df.melt(id_vars=['Model', 'Temperature'],
                     var_name='Strategy', 
                     value_name='Accuracy')
 
+# Create a new column for x-axis labels
+df_melted['Model_Temp'] = df_melted['Model'] + '\n(Temp: ' + df_melted['Temperature'].astype(str) + ')'
+
 # Set up the plot
 plt.figure(figsize=(15, 10))
 sns.set_style("whitegrid")
 
 # Create the grouped bar plot
-ax = sns.barplot(x='Model', y='Accuracy', hue='Strategy', data=df_melted, 
-                 palette='deep', alpha=0.8)
+ax = sns.barplot(x='Model_Temp', y='Accuracy', hue='Strategy', 
+                 data=df_melted, palette='deep', alpha=0.8)
 
 # Customize the plot
 plt.title('Model Performance Comparison', fontsize=16)
 plt.xlabel('Model and Temperature', fontsize=12)
 plt.ylabel('Accuracy', fontsize=12)
 
-# Rotate x-axis labels
+# Rotate x-axis labels for better readability
 plt.xticks(rotation=45, ha='right')
 
-# Add temperature to x-axis labels
-ax.set_xticklabels([f'{model}\n(Temp: {temp})' for model, temp in zip(df['Model'], df['Temperature'])])
+# Adjust y-axis to focus on the relevant range
+plt.ylim(0.45, 0.62)
+
+# Add gridlines for better readability
+ax.yaxis.grid(True, linestyle='--', which='major', color='grey', alpha=.25)
 
 # Adjust the legend
 plt.legend(title='Strategy', bbox_to_anchor=(1.05, 1), loc='upper left')
+
+# Add vertical lines to separate different models
+for i in range(1, 3):
+    plt.axvline(x=i*3-0.5, color='gray', linestyle='--', alpha=0.5)
 
 # Adjust layout and display the plot
 plt.tight_layout()
