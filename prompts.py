@@ -12,22 +12,23 @@ def few_shot_prompt(text: str, dataset, shots=3) -> str:
         composite.append(g.sample(shots))
     examples = pd.concat(composite)
     examples = examples.sample(frac=1).to_dict('records')
-    prompt = f"{INSTRUCTION}\n\nExamples:\n"
+    prompt = [{'role':'system', 'content':f"{INSTRUCTION}"}]
     for example in examples:
-        prompt += f"Text: ```{example['text']}```\nEmotion: {example['emotion']}\n\n"
-    prompt += f"Now classify this text: ```{text}```"
+        prompt += [{'role':'user', 'content':f"Classify this text: ```{example['text']}```"}]
+        prompt += [{'role':'assistant', 'content':example['emotion']}]
+    prompt += [{'role':'user', 'content':f"Classify this text: ```{text}```"}]
     return prompt
 
 def chain_of_thought_prompt(text: str) -> str:
-    return f"""{INSTRUCTION} Let's approach this step-by-step:
+    prompt = [{'role':'system', 'content':f"""{INSTRUCTION} Let's approach this step-by-step:
 
 1. Read the text carefully.
 2. Identify key words or phrases that indicate emotion.
 3. Consider the overall tone and context of the message.
 4. Match the identified emotional cues to the most appropriate emotion from the list.
-5. Provide your final classification.
-
-Based on this approach, classify this text: ```{text}```"""
+5. Provide your final classification."""}]
+    prompt += [{'role':'user', 'content': f"Classify this text: ```{text}```"}]
+    return prompt
 
 def emotion_definition_prompt(text: str) -> str:
     definitions = {
@@ -39,13 +40,13 @@ def emotion_definition_prompt(text: str) -> str:
         "love": "a feeling of strong approval, often romantic or longing"
     }
     definitions_text = "\n".join([f"{emotion.capitalize()}: {definition}" for emotion, definition in definitions.items()])
-    return f"""{INSTRUCTION} based on these definitions:
+    prompt = [{'role':'system', 'content':f"""{INSTRUCTION} based on these definitions:
 
-{definitions_text}
-
-Text to classify: ```{text}```
-
-The emotion expressed in this text is:"""
+{definitions_text}"""}]
+    prompt += [{'role':'user', 'content': f"""Text to classify: ```{text}```
+    
+The emotion expressed in this text is:"""}]
+    return prompt
 
 def persona_based_prompt(text: str) -> str:
     return f"""As an expert psychologist specializing in emotions, analyze and {INSTRUCTION.lower()}
