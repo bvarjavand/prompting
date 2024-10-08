@@ -37,10 +37,11 @@ class EmotionClassificationHarness:
 
     def _initialize_strategies(self) -> List[PromptStrategy]:
         return [
-            PromptStrategy("Zero-shot", zero_shot_prompt),
-            PromptStrategy("Few-shot", lambda text: few_shot_prompt(text, self.train_data_pd)),
-            PromptStrategy("Chain-of-Thought", chain_of_thought_prompt),
-            PromptStrategy("Emotion Definitions", emotion_definition_prompt),
+            PromptStrategy("refined", lambda text: refined_emotion_prompt_v2(text)),
+            # PromptStrategy("Zero-shot", zero_shot_prompt),
+            # PromptStrategy("Few-shot", lambda text: few_shot_prompt(text, self.train_data_pd)),
+            # PromptStrategy("Chain-of-Thought", chain_of_thought_prompt),
+            # PromptStrategy("Emotion Definitions", emotion_definition_prompt),
             # PromptStrategy("Persona-based", persona_based_prompt),
             # PromptStrategy("Multitask", multitask_prompt),
             # PromptStrategy("Structured Output", structured_output_prompt),
@@ -49,7 +50,7 @@ class EmotionClassificationHarness:
 
     def _find_emotion_in_string(self, string):
         # gets the last mentioned emotion
-        idxs = [string.lower().rfind(e) for e in self.emotions]
+        idxs = [string.lower().find(e) for e in self.emotions] # or rfind
         if max(idxs) > -1:
             return self.emotions[idxs.index(max(idxs))]
         else:
@@ -81,6 +82,7 @@ class EmotionClassificationHarness:
     def first_order_evaluations(self):
         strats = self.strategies
         for s in strats:
+            print(s)
             accuracy, f1, cm, raw_predictions = self.evaluate_strategy(s, self.test_data, raw_out=True)
             self.logs[s.name] = (accuracy, f1, cm, raw_predictions)
 
