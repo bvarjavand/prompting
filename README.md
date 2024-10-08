@@ -10,4 +10,4 @@ I've set up a quick example with classifying text as having emotions of either `
 After running the script `python run.py` to sweep across a few models and temperature values, I get the following results.
 
 Output from running on my machine (for the first pass)
-
+![models.png](models.png)
