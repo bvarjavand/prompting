@@ -100,7 +100,7 @@ class ExperimentRunner:
 
 if __name__ == "__main__":
     # Example usage
-    from data.emotion import EmotionDataset
+    from data.datasets import EmotionDataset
     from data.gsm8k import GSM8KDataset
     from data.truthfulqa import TruthfulQADataset
     from prompts.basic import ZeroShotPrompt, FewShotPrompt
