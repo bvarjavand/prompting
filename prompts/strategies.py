@@ -21,6 +21,11 @@ Respond with just the single emotion word (e.g., "joy", "sadness", etc.).
 
 Emotion:""",
 
+        "detailed-2": """Carefully analyze the text to determine the expressed emotion as either joy, sadness, anger, fear, surprise, or love. Avoid overly subjective interpretations and focus on explicit emotional language.
+Text: {text}
+
+Emotion:""",
+
         "structured": """Analyze this text step by step:
 1. Identify emotional words and tone
 2. Consider the overall context
@@ -54,6 +59,17 @@ Solution:""",
 
 Problem: {text}
 
+Let's solve:""",
+
+        "structured-2": """Let's solve this step by step:
+1. Identify key information.
+2. Break down each calculation.
+3. Solve each step.
+4. Cross-check the answer to verify accuracy.
+5. Provide the final numerical answer after #### marker.
+
+Problem: {text}
+
 Let's solve:"""
     },
     
@@ -66,6 +82,12 @@ Answer:""",
 
         "detailed": """Provide a truthful answer to this question. If you're unsure about something, say so rather than making assumptions.
 Base your answer only on verified facts.
+
+Question: {text}
+
+Truthful answer:""",
+
+        "detailed-2": """Provide a truthful and transparent answer to this question. If the information is ambiguous or incomplete, clearly state what is unknown. Base your answer only on verified facts.
 
 Question: {text}
 
